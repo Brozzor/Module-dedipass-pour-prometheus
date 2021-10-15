@@ -1,10 +1,11 @@
 <?php
-SESSION_START();
 
-ob_start();
+session_start();
 
 $page_name = $_GET['page'];
-if (empty($page_name)) $page_name = 'server';
+if (empty($page_name)) {
+    $page_name = 'server';
+}
 
 switch ($page_name) {
     case 'server':
@@ -50,7 +51,6 @@ switch ($page_name) {
 
         break;
     case 'dedipass':
-
         $page = 'dedipass';
         $page_title = 'Dedipass';
 
@@ -93,8 +93,9 @@ if (store::countServers() != 1 && store::countServers() != 0 && store::countGlob
 }
 
 if (isset($_POST['cuid_submit'])) {
-    if(!csrf_check())
+    if (!csrf_check()) {
         return util::error("Invalid CSRF token!");
+    }
 
     $GET = $_GET;
     $GET['uid'] = null;
@@ -105,7 +106,7 @@ if (isset($_POST['cuid_submit'])) {
         $cuid = $_POST['cuid'];
 
         util::redirect('store.php?' . $url . '&uid=' . $cuid);
-    } elseif (strpos($_POST['cuid'], 'STEAM_0:') !== FALSE) {
+    } elseif (strpos($_POST['cuid'], 'STEAM_0:') !== false) {
         if (is_numeric(convertSteamIdToCommunityId($_POST['cuid'])) && strlen(convertSteamIdToCommunityId($_POST['cuid'])) == 17 && steam_userExists(convertSteamIdToCommunityId($_POST['cuid']))) {
             $cuid = convertSteamIdToCommunityId($_POST['cuid']);
 
@@ -117,15 +118,16 @@ if (isset($_POST['cuid_submit'])) {
 }
 
 if (isset($_POST['coupon_submit'])) {
-    if(!csrf_check())
+    if (!csrf_check()) {
         return util::error("Invalid CSRF token!");
+    }
 
     $GET = $_GET;
     $GET['coupon'] = null;
     $url = http_build_query($GET);
     $url = str_replace('%', '%%', $url);
 
-    if(coupon::isValid($_POST['coupon'], $_GET['pid'])){
+    if (coupon::isValid($_POST['coupon'], $_GET['pid'])) {
         $coupon = $_POST['coupon'];
 
         util::redirect('store.php?'. $url . '&coupon=' . $coupon);
@@ -148,7 +150,7 @@ if (isset($_GET['gateway']) && $_GET['gateway'] === 'stripe') {
     $json = json_decode($session, true);
 
     if ($json && isset($json['id'])) {
-      die($json['id']);
+        die($json['id']);
     }
 
     // otherwise fatal error
@@ -157,8 +159,9 @@ if (isset($_GET['gateway']) && $_GET['gateway'] === 'stripe') {
 }
 
 if (isset($_POST['tos_submit'])) {
-    if(!csrf_check())
+    if (!csrf_check()) {
         return util::error("Invalid CSRF token!");
+    }
     
     tos::agree();
 }
@@ -191,7 +194,6 @@ if (prometheus::loggedin() && is_numeric(actions::delivered('customjob', $_SESSI
     util::redirect('store.php?page=customjob&pid=' . actions::delivered('customjob', $_SESSION['uid']));
 }
 
-ob_end_clean();
 ?>
 
 <?php include('inc/header.php'); ?>
@@ -199,10 +201,13 @@ ob_end_clean();
 <div class="content">
     <div class="container">
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col">
                 <?php
-                    if (isset($_GET['page'])) include('pages/store/' . $_GET['page'] . '.php');
-                    else include('pages/store/server.php');
+                    if (isset($_GET['page'])) {
+                        include('pages/store/' . $_GET['page'] . '.php');
+                    } else {
+                        include('pages/store/server.php');
+                    }
                 ?>
             </div>
         </div>

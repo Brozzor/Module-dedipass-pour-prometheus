@@ -15,7 +15,7 @@ $s = $_SESSION['uid'];
 $code = isset($_POST['code']) ? preg_replace('/[^a-zA-Z0-9]+/', '', $_POST['code']) : '';
 if (empty($code)) {
 } else {
-  $dedipass = file_get_contents('http://api.dedipass.com/v1/pay/?public_key='.$pubkey.'&private_key='.$privatekey.'&code=' . $code);
+  $dedipass = file_get_contents('http://api.dedipass.com/v1/pay/?public_key=' . $pubkey . '&private_key=' . $privatekey . '&code=' . $code);
   $dedipass = json_decode($dedipass);
   if ($dedipass->status == 'success') {
     $virtual_currency = $dedipass->virtual_currency;
@@ -31,18 +31,19 @@ if (empty($code)) {
   }
 }
 ?>
-<div class="row">
-  <div class="col-xs-12">
-    <div class="header">
-      <center>Dedipass</center>
-    </div>
-  </div>
 
-  <div class="col-xs-12">
-   <!-- mettre la div en dessous de cette ligne-->
+<?php $message->display(); ?>
+<div class="header" style="text-align: center;margin-left: auto;margin-right: auto;margin-bottom: 30px;">
+  Dedipass
+</div>
 
-   <!-- mettre la div au dessus de cette ligne-->
-  </div>
+<div class="col-xs-12">
+  <!-- mettre la div en dessous de cette ligne-->
+
+  <!-- mettre la div au dessus de cette ligne-->
 </div>
 
 <script src="//api.dedipass.com/v1/pay.js"></script>
+<script defer>
+  document.querySelectorAll('body > div.wrap > div.content > div > div')[0].className = "";
+</script>
